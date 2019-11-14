@@ -32,9 +32,10 @@ class Brain(object):
         def fset(self, new):
             layers = (layer for layer in self.model if len(list(layer.parameters())))
 
-            for layer, (w, b) in zip(layers, zip(new[::2], new[1::2])):
-                layer.weight.data.set_(torch.tensor(w, dtype=torch.float32))
-                layer.bias.data.set_(torch.tensor(b, dtype=torch.float32))
+            with torch.no_grad():
+                for layer, (w, b) in zip(layers, zip(new[::2], new[1::2])):
+                    layer.weight.set_(torch.tensor(w, dtype=torch.float32))
+                    layer.bias.set_(torch.tensor(b, dtype=torch.float32))
 
         return locals()
 
